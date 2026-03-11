@@ -1,0 +1,80 @@
+
+{
+  "entities": {
+    "UserProfile": {
+      "title": "User Profile",
+      "description": "Extended user information stored in Firestore.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "role": { "type": "string", "enum": ["Patient", "Doctor", "Nurse", "Receptionist", "Administrator"] },
+        "avatarUrl": { "type": "string" }
+      },
+      "required": ["name", "email", "role"]
+    },
+    "MedicalRecord": {
+      "title": "Medical Record",
+      "description": "Patient health information.",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "patientName": { "type": "string" },
+        "age": { "type": "number" },
+        "gender": { "type": "string" },
+        "bloodType": { "type": "string" },
+        "history": { "type": "array", "items": { "type": "object" } },
+        "vitals": { "type": "array", "items": { "type": "object" } },
+        "prescriptions": { "type": "array", "items": { "type": "object" } }
+      }
+    },
+    "Appointment": {
+      "title": "Appointment",
+      "description": "Patient visits and scheduling.",
+      "type": "object",
+      "properties": {
+        "patientId": { "type": "string" },
+        "patientName": { "type": "string" },
+        "doctorId": { "type": "string" },
+        "doctorName": { "type": "string" },
+        "date": { "type": "string" },
+        "time": { "type": "string" },
+        "status": { "type": "string", "enum": ["Scheduled", "Completed", "Cancelled"] }
+      }
+    },
+    "AuditLog": {
+      "title": "Audit Log",
+      "description": "Security and access trail.",
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "action": { "type": "string" },
+        "details": { "type": "string" },
+        "severity": { "type": "string", "enum": ["low", "medium", "high"] }
+      }
+    }
+  },
+  "auth": {
+    "providers": ["email"]
+  },
+  "firestore": {
+    "/users/{userId}": {
+      "schema": "UserProfile",
+      "description": "Private user profile data."
+    },
+    "/medical_records/{recordId}": {
+      "schema": "MedicalRecord",
+      "description": "Restricted medical history."
+    },
+    "/appointments/{appointmentId}": {
+      "schema": "Appointment",
+      "description": "Scheduling details."
+    },
+    "/audit_logs/{logId}": {
+      "schema": "AuditLog",
+      "description": "System audit logs."
+    }
+  }
+}
